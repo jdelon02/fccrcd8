@@ -1,0 +1,14 @@
+uuid: a3728d5a-f3fc-42b3-8c96-f03f0ae0fa8e
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: vymHlgJy26BuI5GGj9-IXjwR3dRC5C0tij4BpWJnoqw
+id: feedback
+label: 'Website feedback'
+recipients:
+  - chefjeremy@delongaz.com
+reply: ''
+weight: 0
+message: 'Your message has been sent.'
+redirect: ''
