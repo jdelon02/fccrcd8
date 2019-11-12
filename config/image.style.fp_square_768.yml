@@ -1,0 +1,19 @@
+uuid: 177f7d51-342e-480e-848d-92270c1b2b4a
+langcode: en
+status: true
+dependencies:
+  module:
+    - focal_point
+_core:
+  default_config_hash: CXlVEEtAXC2gzFryo8rs6H9FHeYR1jEY2I9Qvzo7vdk
+name: fp_square_768
+label: 'FP Square (768)'
+effects:
+  f47471d4-e8cf-4493-83d6-7e891c02d3d9:
+    uuid: f47471d4-e8cf-4493-83d6-7e891c02d3d9
+    id: focal_point_crop
+    weight: 1
+    data:
+      width: 768
+      height: 768
+      crop_type: square_crop

@@ -1,0 +1,25 @@
+uuid: b103089d-7c88-43d9-8eb8-8057d6df1723
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:d0ab8a50-babe-4b60-b3e3-9eb22cdf34b8'
+  module:
+    - block_content
+  theme:
+    - bot_custom
+id: address
+theme: bot_custom
+region: footer_two
+weight: 0
+provider: null
+plugin: 'block_content:d0ab8a50-babe-4b60-b3e3-9eb22cdf34b8'
+settings:
+  id: 'block_content:d0ab8a50-babe-4b60-b3e3-9eb22cdf34b8'
+  label: Address
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

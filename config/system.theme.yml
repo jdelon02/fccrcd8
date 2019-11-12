@@ -1,4 +1,4 @@
-admin: seven
-default: bartik
+admin: adminimal_bot
+default: bot_custom
 _core:
   default_config_hash: fOjer9hADYYnbCJVZMFZIIM1azTFWyg84ZkFDHfAbUg

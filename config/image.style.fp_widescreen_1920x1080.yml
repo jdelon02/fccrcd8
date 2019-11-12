@@ -1,0 +1,19 @@
+uuid: 84bcce31-cd84-4f30-8114-2ddad2618e0a
+langcode: en
+status: true
+dependencies:
+  module:
+    - focal_point
+_core:
+  default_config_hash: IAmAYDpe3FWSqYWax2ATgHdAJ08EcFkZG6-uvVLdE2w
+name: fp_widescreen_1920x1080
+label: 'FP Widescreen (1920x1080)'
+effects:
+  7d6188c6-07ad-456e-838a-26d27a4b0bdc:
+    uuid: 7d6188c6-07ad-456e-838a-26d27a4b0bdc
+    id: focal_point_crop
+    weight: 1
+    data:
+      width: 1920
+      height: 1080
+      crop_type: widescreen_crop

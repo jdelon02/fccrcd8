@@ -1,0 +1,48 @@
+uuid: 7573e75d-ca95-463d-bdcb-561809d74564
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.image_only_block
+    - field.field.block_content.image_only_block.field_logo_image
+  module:
+    - ds
+third_party_settings:
+  ds:
+    layout:
+      id: bs_1col
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        layout:
+          wrapper: div
+          classes:
+            row: row
+          add_layout_class: 1
+          attributes: ''
+        regions:
+          main:
+            wrapper: div
+            classes:
+              col-sm-12: col-sm-12
+            add_region_classes: 1
+            attributes: ''
+    regions:
+      main:
+        - field_logo_image
+id: block_content.image_only_block.default
+targetEntityType: block_content
+bundle: image_only_block
+mode: default
+content:
+  field_logo_image:
+    type: entity_reference_entity_view
+    weight: 0
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    region: main
+hidden: {  }

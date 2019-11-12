@@ -1,0 +1,8 @@
+uuid: fb5b2125-c283-4760-ad65-3cc56920c22c
+langcode: en
+status: true
+dependencies: {  }
+id: image_only_block
+label: 'Image only Block'
+revision: 0
+description: ''

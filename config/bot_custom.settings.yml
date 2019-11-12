@@ -1,0 +1,43 @@
+schemas:
+  bootstrap: 8000
+  bot_custom: 8000
+favicon:
+  mimetype: image/vnd.microsoft.icon
+  path: ''
+  url: 'http://fccrcd8.bot/themes/custom/bot_custom/favicon.ico'
+  use_default: true
+features:
+  comment_user_picture: true
+  comment_user_verification: true
+  favicon: true
+  node_user_picture: true
+logo:
+  path: 'public://fccrc_small_logo.png'
+  url: ''
+  use_default: false
+table_responsive: '-1'
+region_wells:
+  navigation: ''
+  navigation_collapsible: ''
+  header: ''
+  highlighted: ''
+  help: ''
+  content_top: ''
+  content: ''
+  content_bottom: ''
+  content_baseline: ''
+  sidebar_first: ''
+  sidebar_second: well
+  footer: ''
+  footer_one: ''
+  footer_two: ''
+  footer_three: ''
+  footer_four: ''
+  footer_abs_bottom: ''
+cdn_theme: bootstrap
+cdn_cache_ttl_versions: '604800'
+cdn_cache_ttl_themes: '604800'
+cdn_cache_ttl_assets: '0'
+cdn_cache_ttl_library: '0'
+reset_http_request_cache: ''
+table: ''

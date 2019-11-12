@@ -1,0 +1,29 @@
+uuid: a571022e-00e9-4229-8b31-1743091226bd
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:51aeac23-54a4-4048-bb81-33e4d7228b8a'
+  module:
+    - block_class
+    - block_content
+  theme:
+    - bot_custom
+third_party_settings:
+  block_class:
+    classes: copyrightblock
+id: bottomfootercopyrightblock
+theme: bot_custom
+region: footer_abs_bottom
+weight: 0
+provider: null
+plugin: 'block_content:51aeac23-54a4-4048-bb81-33e4d7228b8a'
+settings:
+  id: 'block_content:51aeac23-54a4-4048-bb81-33e4d7228b8a'
+  label: 'Bottom Footer Copyright Block'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

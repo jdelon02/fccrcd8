@@ -1,0 +1,19 @@
+uuid: 38b90b45-7d9e-4bf3-8f61-2ad420a7888a
+langcode: en
+status: true
+dependencies:
+  module:
+    - focal_point
+_core:
+  default_config_hash: Lgck_UwpT82euhjvhFVqB5w5h3sVWOGgAJKwtYuNxec
+name: fp_cinemascope_1200x515
+label: 'FP Cinemascope (1200x515)'
+effects:
+  240f942e-ec78-4bc7-9198-4d8efa4fb503:
+    uuid: 240f942e-ec78-4bc7-9198-4d8efa4fb503
+    id: focal_point_crop
+    weight: 1
+    data:
+      width: 1200
+      height: 515
+      crop_type: cinemascope_crop

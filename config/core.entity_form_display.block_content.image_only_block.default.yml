@@ -1,0 +1,30 @@
+uuid: af26a894-7339-47b1-be8c-5096e1014361
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.image_only_block
+    - field.field.block_content.image_only_block.field_logo_image
+  module:
+    - media_library
+id: block_content.image_only_block.default
+targetEntityType: block_content
+bundle: image_only_block
+mode: default
+content:
+  field_logo_image:
+    type: media_library_widget
+    weight: 26
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+    region: content
+  info:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

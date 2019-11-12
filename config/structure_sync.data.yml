@@ -1,0 +1,108 @@
+blocks:
+  -
+    info: 'Logo Block in Footer'
+    langcode: en
+    uuid: c459e707-a4fc-4057-b027-e3b6a8a0e272
+    bundle: image_only_block
+    revision_id: null
+    rev_id_current: null
+    fields:
+      field_logo_image:
+        target_id: '1'
+  -
+    info: Address
+    langcode: en
+    uuid: d0ab8a50-babe-4b60-b3e3-9eb22cdf34b8
+    bundle: basic
+    revision_id: null
+    rev_id_current: null
+    fields:
+      body:
+        value: "<p>Friends Center City</p>\r\n\r\n<p>P.O. Box 2002</p>\r\n\r\n<p>Philadelphia, PA 19103</p>\r\n\r\n<p>Phone: 267-639-5257</p>\r\n"
+        summary: ''
+        format: basic_html
+  -
+    info: 'Bottom Footer Copyright Block'
+    langcode: en
+    uuid: 51aeac23-54a4-4048-bb81-33e4d7228b8a
+    bundle: basic
+    revision_id: null
+    rev_id_current: null
+    fields:
+      body:
+        value: "<p>Copyright 2019 Friends In The City</p>\r\n"
+        summary: ''
+        format: basic_html
+menus:
+  -
+    menu_name: main
+    title: 'Riverfront Residential'
+    parent: null
+    uri: 'internal:/'
+    link_title: ''
+    description: null
+    enabled: '1'
+    expanded: '0'
+    weight: '-49'
+    langcode: en
+    uuid: 71e9f159-989c-41b6-99bb-08a59e1bec3e
+  -
+    menu_name: main
+    title: FitC
+    parent: null
+    uri: 'internal:/'
+    link_title: ''
+    description: null
+    enabled: '1'
+    expanded: '0'
+    weight: '-48'
+    langcode: en
+    uuid: 99c40fea-2ab8-419c-ae4d-2d6f55f85062
+  -
+    menu_name: main
+    title: 'FitC Plus'
+    parent: null
+    uri: 'internal:/'
+    link_title: ''
+    description: null
+    enabled: '1'
+    expanded: '0'
+    weight: '-47'
+    langcode: en
+    uuid: e599658d-3aec-4d49-b9e8-e0fc11340f5c
+  -
+    menu_name: main
+    title: Events
+    parent: null
+    uri: 'internal:/'
+    link_title: ''
+    description: null
+    enabled: '1'
+    expanded: '0'
+    weight: '-46'
+    langcode: en
+    uuid: 1496a16b-051a-4310-b441-891affa1ee84
+  -
+    menu_name: main
+    title: Contact
+    parent: null
+    uri: 'internal:/'
+    link_title: ''
+    description: null
+    enabled: '1'
+    expanded: '0'
+    weight: '-45'
+    langcode: en
+    uuid: c93e2be7-ff41-4603-9e88-2696bd447c1a
+  -
+    menu_name: main
+    title: Donate
+    parent: null
+    uri: 'internal:/'
+    link_title: ''
+    description: null
+    enabled: '1'
+    expanded: '0'
+    weight: '-44'
+    langcode: en
+    uuid: 61fbf7fa-4ec5-4e08-ad19-1a84277136f5

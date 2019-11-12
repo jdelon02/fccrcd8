@@ -1,0 +1,25 @@
+uuid: 205f70d9-bf40-4d84-90c2-ba22bc67c6f9
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:image_only_block:c459e707-a4fc-4057-b027-e3b6a8a0e272'
+  module:
+    - block_content
+  theme:
+    - bot_custom
+id: logoblockinfooter
+theme: bot_custom
+region: footer_one
+weight: 0
+provider: null
+plugin: 'block_content:c459e707-a4fc-4057-b027-e3b6a8a0e272'
+settings:
+  id: 'block_content:c459e707-a4fc-4057-b027-e3b6a8a0e272'
+  label: 'Logo Block in Footer'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

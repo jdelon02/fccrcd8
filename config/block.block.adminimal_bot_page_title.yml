@@ -1,0 +1,20 @@
+uuid: fdf13f14-b547-4669-8fac-bdc94a3b88bf
+langcode: en
+status: true
+dependencies:
+  theme:
+    - adminimal_bot
+_core:
+  default_config_hash: xLpdQ_1meDaP6qrkXvaj00pAF02L83YGwwv-OX04BDM
+id: adminimal_bot_page_title
+theme: adminimal_bot
+region: header
+weight: -30
+provider: null
+plugin: page_title_block
+settings:
+  id: page_title_block
+  label: 'Page title'
+  provider: core
+  label_display: '0'
+visibility: {  }

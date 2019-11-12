@@ -1,0 +1,36 @@
+uuid: bf9bd3ce-6a72-4815-94af-3bf6d68a8d01
+langcode: en
+status: true
+dependencies:
+  config:
+    - image.style.fp_square_1024
+    - image.style.fp_square_256
+    - image.style.fp_square_512
+    - image.style.fp_square_768
+_core:
+  default_config_hash: IviB7b9M85_zOi-pVLS7OeeykB5W158bhxaE8TPtrcY
+id: square_1_1
+label: 'Square (1:1)'
+image_style_mappings:
+  -
+    breakpoint_id: bot_custom.screen-lg-min
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: fp_square_1024
+  -
+    breakpoint_id: bot_custom.screen-md-max
+    multiplier: 2x
+    image_mapping_type: image_style
+    image_mapping: fp_square_768
+  -
+    breakpoint_id: bot_custom.screen-sm-max
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: fp_square_512
+  -
+    breakpoint_id: bot_custom.screen-xs-max
+    multiplier: 1x
+    image_mapping_type: image_style
+    image_mapping: fp_square_256
+breakpoint_group: bot_custom
+fallback_image_style: fp_square_256

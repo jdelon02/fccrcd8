@@ -1,0 +1,18 @@
+name: Image Link Attributes
+type: module
+description: Extends the image field link to add custom attributes for adding class=, target= and rel=
+
+configure: image_link_attributes.config
+
+# core: 8.x
+package: Media
+
+dependencies:
+  - image 
+  - link
+
+# Information added by Drupal.org packaging script on 2016-10-12
+version: '8.x-1.2'
+core: '8.x'
+project: 'image_link_attributes'
+datestamp: 1476238447
