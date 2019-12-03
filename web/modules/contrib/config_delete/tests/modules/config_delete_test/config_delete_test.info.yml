@@ -5,7 +5,7 @@ package: 'Testing'
 core: 8.x
 hidden: true
 
-# Information added by Drupal.org packaging script on 2019-10-11
-version: '8.x-1.09'
+# Information added by Drupal.org packaging script on 2019-12-02
+version: '8.x-1.12'
 project: 'config_delete'
-datestamp: 1570772291
+datestamp: 1575316089
