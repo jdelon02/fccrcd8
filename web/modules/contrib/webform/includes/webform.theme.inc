@@ -9,6 +9,7 @@ use Drupal\file\Entity\File;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\webform\Utility\WebformAccessibilityHelper;
 use Drupal\webform\Utility\WebformElementHelper;
 
@@ -34,6 +35,7 @@ function webform_theme() {
     'webform_actions' => [
       'render element' => 'element',
     ],
+
     'webform_handler_action_summary' => [
       'variables' => ['settings' => NULL, 'handler' => NULL],
     ],
@@ -48,6 +50,10 @@ function webform_theme() {
     ],
     'webform_handler_settings_summary' => [
       'variables' => ['settings' => NULL, 'handler' => NULL],
+    ],
+
+    'webform_variant_override_summary' => [
+      'variables' => ['settings' => NULL, 'variant' => NULL],
     ],
 
     'webform_confirmation' => [
@@ -454,13 +460,13 @@ function webform_preprocess_form_element(&$variables) {
   // @see core/modules/system/templates/form-element.html.twig
   // @see claro/templates/form-element.html.twig
   // @todo Once Claro is stable determine if this code should removed.
-  static $is_claro_active_theme;
-  if (!isset($is_claro_active_theme)) {
+  static $is_claro_theme;
+  if (!isset($is_claro_theme)) {
     /** @var \Drupal\webform\WebformThemeManagerInterface $theme_manager */
     $theme_manager = \Drupal::service('webform.theme_manager');
-    $is_claro_active_theme = $theme_manager->isActiveTheme('claro');
+    $is_claro_theme = $theme_manager->isActiveTheme('claro');
   }
-  if ($is_claro_active_theme) {
+  if ($is_claro_theme) {
     // Add system .form-type-TYPE class.
     if (!empty($variables['type'])) {
       $variables['attributes']['class'][] = 'form-type-' . Html::getClass($variables['type']);
@@ -491,6 +497,7 @@ function webform_preprocess_form_element_label(&$variables) {
 
   // Remove label 'for' attribute.
   if (!empty($element['#attributes']['webform-remove-for-attribute'])) {
+    unset($element['#attributes']['webform-remove-for-attribute']);
     unset($variables['attributes']['webform-remove-for-attribute']);
     unset($variables['attributes']['for']);
   }
@@ -559,11 +566,29 @@ function webform_preprocess_file_managed_file(&$variables) {
 
 /**
  * Prepares variables for file upload help text templates.
+ *
+ * @see \Drupal\webform\Plugin\WebformElement\WebformManagedFileBase::prepare
  */
 function webform_preprocess_file_upload_help(&$variables) {
   $upload_validators = $variables['upload_validators'];
+
   if (isset($upload_validators['webform_file_limit']) && $upload_validators['webform_file_limit'][0]) {
     $variables['descriptions'][] = t('@size limit per form.', ['@size' => format_size($upload_validators['webform_file_limit'][0])]);
+  }
+
+  // Issue #3136578: Comma-separate the list of allowed file extensions.
+  // @see https://www.drupal.org/project/drupal/issues/3136578
+  if (isset($upload_validators['webform_file_validate_extensions'])) {
+    foreach ($variables['descriptions'] as $index => $description) {
+      if ($description instanceof TranslatableMarkup
+        && $description->getUntranslatedString() == 'Allowed types: @extensions.') {
+        $arguments = $description->getArguments();
+        if (strpos($arguments['@extensions'], ',') === FALSE) {
+          $arguments['@extensions'] = preg_replace('/ +/', ', ', $arguments['@extensions']);
+          $variables['descriptions'][$index] = new TranslatableMarkup($description->getUntranslatedString(), $arguments);
+        }
+      }
+    }
   }
 }
 
@@ -578,8 +603,13 @@ function webform_preprocess_file_link(&$variables) {
   $file = ($file instanceof File) ? $file : File::load($file->fid);
 
   // Remove link to temporary anonymous private file uploads.
-  if ($file->isTemporary() && $file->getOwner()->isAnonymous() && strpos($file->getFileUri(), 'private://webform/') === 0) {
+  if ($file->isTemporary() && $file->getOwner() && $file->getOwner()->isAnonymous() && strpos($file->getFileUri(), 'private://webform/') === 0) {
     $variables['link'] = $file->getFilename();
+  }
+
+  // Add file size variable to Claro theme.
+  if (empty($variables['file_size']) && \Drupal::service('webform.theme_manager')->isActiveTheme('claro')) {
+    $variables['file_size'] = format_size($file->getSize(), \Drupal::languageManager()->getCurrentLanguage()->getId());
   }
 }
 
@@ -642,7 +672,7 @@ function _webform_preprocess_options(array &$variables) {
  */
 function _webform_preprocess_element(array &$variables, $title_parents = ['title']) {
   $element =& $variables['element'];
-  $type = $element['#type'];
+  $type = (isset($element['#type'])) ? $element['#type'] : '';
 
   // Fix details 'description' property which does not have description.content.
   // @see template_preprocess_details
@@ -707,6 +737,11 @@ function _webform_preprocess_element(array &$variables, $title_parents = ['title
 
   // Add help to title (aka label).
   _webform_preprocess_help($variables, $title_parents);
+
+  // Hide 'item' label[for].
+  if ($type === 'item') {
+    $variables['label']['#attributes']['webform-remove-for-attribute'] = TRUE;
+  }
 }
 
 /**
@@ -746,7 +781,7 @@ function _webform_preprocess_description_help(array &$variables) {
  */
 function _webform_preprocess_help(array &$variables, $title_parents = ['title']) {
   $element =& $variables['element'];
-  $type = $element['#type'];
+  $type = (isset($element['#type'])) ? $element['#type'] : '';
 
   if (empty($element['#help'])) {
     return;
@@ -1148,7 +1183,9 @@ function webform_theme_suggestions_form_element(array $variables) {
   $suggestions = [];
 
   // Add webform type suggestion.
-  $suggestions[] = 'form_element__webform_' . $element['#type'];
+  if (isset($element['#type'])) {
+    $suggestions[] = 'form_element__webform_' . $element['#type'];
+  }
 
   // Add radio/checkbox displayed as a button suggestion.
   // @sse webform_process_options()
