@@ -255,6 +255,15 @@ elements: |
   webform_multiple_custom_attributes:
     '#type': webform_multiple
     '#title': webform_multiple_custom_attributes
+    '#ajax_attributes':
+      class:
+        - custom-ajax
+    '#table_wrapper_attributes':
+      class:
+        - custom-table-wrapper
+    '#table_attributes':
+      class:
+        - custom-table
     '#header': true
     '#element':
       textfield:
@@ -311,6 +320,11 @@ settings:
   form_access_denied_message: ''
   form_access_denied_attributes: {  }
   form_file_limit: ''
+  share: false
+  share_node: false
+  share_theme_name: ''
+  share_title: true
+  share_page_body_attributes: {  }
   submission_label: ''
   submission_log: false
   submission_views: {  }
@@ -383,6 +397,8 @@ settings:
   purge_days: null
   results_disabled: true
   results_disabled_ignore: false
+  results_customize: false
+  token_view: false
   token_update: false
 access:
   create:
@@ -440,3 +456,4 @@ handlers:
     conditions: {  }
     weight: 0
     settings: {  }
+variants: {  }
