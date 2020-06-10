@@ -15,6 +15,16 @@ title: 'Test: Token submission value'
 description: 'Test Webform submission values tokens'
 category: 'Test: Token'
 elements: |
+  checkboxes:
+    '#type': checkboxes
+    '#title': checkboxes
+    '#options':
+      one: One
+      two: Two
+      three: Three
+    '#default_value':
+      - one
+      - three
   email:
     '#type': email
     '#title': email
@@ -116,6 +126,9 @@ elements: |
       '#type': textfield
       '#title': last_name
       '#default_value': Smith
+  webform_markup:
+    '#type': webform_markup
+    '#markup': '<strong>This is some basic HTML.</strong>'
   url:
     '#type': url
     '#title': url
@@ -170,6 +183,11 @@ settings:
   form_access_denied_message: ''
   form_access_denied_attributes: {  }
   form_file_limit: ''
+  share: false
+  share_node: false
+  share_theme_name: ''
+  share_title: true
+  share_page_body_attributes: {  }
   submission_label: ''
   submission_log: false
   submission_views: {  }
@@ -225,6 +243,14 @@ settings:
     <tr><th width="50%">webform:element:email:description</th><td width="50%">[webform:element:email:description]</td></tr>
     <tr><th width="50%">webform:element:not_element:description</th><td width="50%">[webform:element:not_element:description]</td></tr>
     <tr><th width="50%">webform:element:email:not_property</th><td width="50%">[webform:element:email:not_property]</td></tr>
+    </table>
+    
+    <h3>checkboxes</h3>
+    <table class="table">
+    <tr><th width="50%">webform:element:checkboxes</th><td width="50%">[webform_submission:values:checkboxes]</td></tr>
+    <tr><th width="50%">webform:element:checkboxes:checked:one</th><td width="50%">[webform_submission:values:checkboxes:checked:one]</td></tr>
+    <tr><th width="50%">webform:element:checkboxes:selected:two</th><td width="50%">[webform_submission:values:checkboxes:selected:two]</td></tr>
+    <tr><th width="50%">webform:element:checkboxes:selected:three</th><td width="50%">[webform_submission:values:checkboxes:selected:three]</td></tr>
     </table>
     
     <h3>emails</h3>
@@ -308,6 +334,12 @@ settings:
     <tr><th width="50%">webform_submission:total:user:source_entity</th><td width="50%">[webform_submission:total:user:source_entity]</td></tr>
     </table>
     
+    <h3>markup</h3>
+    <table class="table">
+    <tr><th width="50%">webform_submission:values:webform_markup</th><td width="50%">[webform_submission:values:webform_markup]</td></tr>
+    <tr><th width="50%">webform_submission:values:webform_markup:html</th><td width="50%">[webform_submission:values:webform_markup:html]</td></tr>
+    </table>
+    
     <h3>clear</h3>
     <table class="table">
     <tr><th width="50%">webform_submission:values:missing</th><td width="50%">[webform_submission:values:missing]</td></tr>
@@ -355,6 +387,8 @@ settings:
   purge_days: null
   results_disabled: false
   results_disabled_ignore: false
+  results_customize: false
+  token_view: false
   token_update: true
 access:
   create:
@@ -404,3 +438,4 @@ access:
     users: {  }
     permissions: {  }
 handlers: {  }
+variants: {  }
