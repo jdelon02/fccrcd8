@@ -64,5 +64,47 @@ function hook_bootstrap_iconize_text_alter(array &$texts) {
 }
 
 /**
+ * Allows sub-themes to alter element types that should be rendered as inline.
+ *
+ * @param array $types
+ *   The list of element types that should be rendered as inline.
+ *
+ * @deprecated in bootstrap:8.x-3.21 and is removed from bootstrap:8.x-4.0.
+ *   This method will be removed when process managers can be sub-classed.
+ *
+ * @see https://www.drupal.org/project/bootstrap/issues/2868538
+ */
+function hook_bootstrap_inline_element_types_alter(array &$types) {
+  // Remove certain types from the list.
+  foreach (['number', 'tel'] as $type) {
+    $index = array_search($type, $types);
+    if ($index !== FALSE) {
+      unset($types[$index]);
+    }
+  }
+}
+
+/**
+ * Allows sub-themes to alter which element properties should be strings.
+ *
+ * Note: this only applies with using \Drupal\bootstrap\Utility\Element objects.
+ * This is primarily used in cases where the value of the property in
+ * question is only supported as an already rendered string and not a render
+ * array (i.e. prefix/suffix) due to the limitations of upstream (core) code.
+ * It should not be relied on as a way to "easily convert" properties to
+ * strings to circumvent supporting OOP code.
+ *
+ * @param array $properties
+ *   An indexed array of property names, without the # prefix, passed by
+ *   reference.
+ *
+ * @see \Drupal\bootstrap\Utility\Element::isStringProperty
+ */
+function hook_element_string_properties_alter(array &$properties) {
+  // A contrib module property that should always be a string.
+  $properties[] = 'contrib_module_property';
+}
+
+/**
  * @} End of "addtogroup".
  */
