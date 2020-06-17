@@ -24,6 +24,7 @@ elements: |
     '#type': 'webform_options_custom:test_ballroom'
     '#title': webform_options_custom_url_ballroom
     '#required': true
+  
 css: ''
 javascript: ''
 settings:
@@ -65,6 +66,11 @@ settings:
   form_access_denied_message: ''
   form_access_denied_attributes: {  }
   form_file_limit: ''
+  share: false
+  share_node: false
+  share_theme_name: ''
+  share_title: true
+  share_page_body_attributes: {  }
   submission_label: ''
   submission_log: false
   submission_views: {  }
@@ -89,6 +95,7 @@ settings:
   wizard_progress_pages: false
   wizard_progress_percentage: false
   wizard_progress_link: false
+  wizard_progress_states: false
   wizard_start_label: ''
   wizard_preview_link: false
   wizard_confirmation: true
@@ -136,6 +143,8 @@ settings:
   purge_days: null
   results_disabled: false
   results_disabled_ignore: false
+  results_customize: false
+  token_view: false
   token_update: false
 access:
   create:
@@ -193,3 +202,4 @@ handlers:
     conditions: {  }
     weight: 0
     settings: {  }
+variants: {  }
