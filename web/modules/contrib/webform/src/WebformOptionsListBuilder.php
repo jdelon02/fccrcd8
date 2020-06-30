@@ -225,7 +225,7 @@ class WebformOptionsListBuilder extends ConfigEntityListBuilder {
     $options = WebformOptions::getElementOptions($element);
     $options = OptGroup::flattenOptions($options);
     foreach ($options as $key => &$value) {
-      if ($key != $value) {
+      if ($key !== $value) {
         $value .= ' (' . $key . ')';
       }
     }
@@ -237,9 +237,9 @@ class WebformOptionsListBuilder extends ConfigEntityListBuilder {
    */
   public function buildOperations(EntityInterface $entity) {
     return parent::buildOperations($entity) + [
-        '#prefix' => '<div class="webform-dropbutton">',
-        '#suffix' => '</div>',
-      ];
+      '#prefix' => '<div class="webform-dropbutton">',
+      '#suffix' => '</div>',
+    ];
   }
 
   /**
