@@ -39,7 +39,7 @@ function webform_access_token_info() {
     'description' => t('The email addresses of all <strong>administrators</strong> assigned to the current webform.'),
   ];
   $webform_access['all'] = [
-    'name' => t('All users, custom email addresses, and adminstrators'),
+    'name' => t('All users, custom email addresses, and administrators'),
     'description' => t('The email addresses of all <strong>users</strong>, <strong>custom email addresses</strong>, and <strong>administrators</strong> assigned to the current webform.'),
   ];
   foreach ($webform_access_types as $webform_access_type_name => $webform_access_type) {
@@ -77,7 +77,7 @@ function webform_access_token_info() {
  */
 function webform_access_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
   $replacements = [];
-  if ($type == 'webform_access' && !empty($data['webform_access'])) {
+  if ($type === 'webform_access' && !empty($data['webform_access'])) {
     /** @var \Drupal\webform_access\WebformAccessGroupStorageInterface $webform_access_group_storage */
     $webform_access_group_storage = \Drupal::entityTypeManager()->getStorage('webform_access_group');
 
