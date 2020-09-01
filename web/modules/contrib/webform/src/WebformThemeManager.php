@@ -84,13 +84,13 @@ class WebformThemeManager implements WebformThemeManagerInterface {
    *
    * @todo Webform 8.x-6.x: Move $route_match first.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, RendererInterface $renderer, ThemeManagerInterface $theme_manager, ThemeHandlerInterface $theme_handler, ThemeInitializationInterface $theme_initialization, RouteMatchInterface $route_match) {
+  public function __construct(ConfigFactoryInterface $config_factory, RendererInterface $renderer, ThemeManagerInterface $theme_manager, ThemeHandlerInterface $theme_handler, ThemeInitializationInterface $theme_initialization, RouteMatchInterface $route_match = NULL) {
     $this->configFactory = $config_factory;
     $this->renderer = $renderer;
     $this->themeManager = $theme_manager;
     $this->themeHandler = $theme_handler;
     $this->themeInitialization = $theme_initialization;
-    $this->routeMatch = $route_match;
+    $this->routeMatch = $route_match ?: \Drupal::routeMatch();
   }
 
   /**
@@ -110,13 +110,14 @@ class WebformThemeManager implements WebformThemeManagerInterface {
    *   An associative array containing theme name.
    */
   public function getThemeNames() {
-    $themes = ['' => $this->t('Default')];
+    $themes = [];
     foreach ($this->themeHandler->listInfo() as $name => $theme) {
       if ($theme->status === 1) {
         $themes[$name] = $theme->info['name'];
       }
     }
-    return $themes;
+    asort($themes);
+    return ['' => $this->t('Default')] + $themes;
   }
 
   /**
@@ -125,7 +126,7 @@ class WebformThemeManager implements WebformThemeManagerInterface {
   public function getActiveThemeNames() {
     $active_theme = $this->themeManager->getActiveTheme();
     // Note: Reversing the order so that base themes are first.
-    return array_reverse(array_merge([$active_theme->getName()], array_keys($active_theme->getBaseThemes())));
+    return array_reverse(array_merge([$active_theme->getName()], array_keys($active_theme->getBaseThemeExtensions())));
   }
 
   /**
