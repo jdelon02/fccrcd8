@@ -3,11 +3,14 @@
 namespace Drupal\migrate_drupal_ui\Form;
 
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\Exception\BadPluginDefinitionException;
+use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -37,12 +40,18 @@ class CredentialForm extends MigrateUpgradeFormBase {
    * CredentialForm constructor.
    *
    * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $tempstore_private
-   *   The private tempstore factory.
+   *   The private tempstore factory service.
    * @param \GuzzleHttp\ClientInterface $http_client
    *   A Guzzle client object.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory service.
+   * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $migration_plugin_manager
+   *   The migration plugin manager service.
+   * @param \Drupal\Core\State\StateInterface $state
+   *   The state service.
    */
-  public function __construct(PrivateTempStoreFactory $tempstore_private, ClientInterface $http_client) {
-    parent::__construct($tempstore_private);
+  public function __construct(PrivateTempStoreFactory $tempstore_private, ClientInterface $http_client, ConfigFactoryInterface $config_factory, MigrationPluginManagerInterface $migration_plugin_manager, StateInterface $state) {
+    parent::__construct($config_factory, $migration_plugin_manager, $state, $tempstore_private);
     $this->httpClient = $http_client;
   }
 
@@ -52,7 +61,10 @@ class CredentialForm extends MigrateUpgradeFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('tempstore.private'),
-      $container->get('http_client')
+      $container->get('http_client'),
+      $container->get('config.factory'),
+      $container->get('plugin.manager.migration'),
+      $container->get('state')
     );
   }
 
@@ -155,7 +167,7 @@ class CredentialForm extends MigrateUpgradeFormBase {
     ];
     $form['source']['d6_source_base_path'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Files directory'),
+      '#title' => $this->t('Document root for files'),
       '#description' => $this->t('To import files from your current Drupal site, enter a local file directory containing your site (e.g. /var/www/docroot), or your site address (for example http://example.com).'),
       '#states' => [
         'visible' => [
@@ -167,7 +179,7 @@ class CredentialForm extends MigrateUpgradeFormBase {
 
     $form['source']['source_base_path'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Public files directory'),
+      '#title' => $this->t('Document root for public files'),
       '#description' => $this->t('To import public files from your current Drupal site, enter a local file directory containing your site (e.g. /var/www/docroot), or your site address (for example http://example.com).'),
       '#states' => [
         'visible' => [
@@ -179,7 +191,7 @@ class CredentialForm extends MigrateUpgradeFormBase {
 
     $form['source']['source_private_file_path'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Private files directory'),
+      '#title' => $this->t('Document root for private files'),
       '#default_value' => '',
       '#description' => $this->t('To import private files from your current Drupal site, enter a local file directory containing your site (e.g. /var/www/docroot).'),
       '#states' => [
