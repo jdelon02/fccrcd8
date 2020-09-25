@@ -14,6 +14,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Html;
+use Drupal\node\Entity\Node;
 
 /**
  * Implements hook_help().
@@ -33,15 +34,12 @@ function image_link_attributes_help($route_name, RouteMatchInterface $route_matc
 
 /**
  * Implements hook_field_formatter_settings_summary_alter().
- *
- * @param $summary
- * @param $context
  */
 function image_link_attributes_field_formatter_settings_summary_alter(&$summary, $context) {
   $available_attributes = \Drupal::config('image_link_attributes.config')->get('attributes') ?: [];
   $settings = $context['formatter']->getThirdPartySettings('image_link_attributes');
   $image_settings = $context['formatter']->getSettings();
-  if(array_key_exists('image_link' , $image_settings)){
+  if (array_key_exists('image_link', $image_settings)) {
     $image_link = $image_settings['image_link'];
   }
 
@@ -55,8 +53,8 @@ function image_link_attributes_field_formatter_settings_summary_alter(&$summary,
 
   $summary_items = [];
 
-  // Insert Target into the summary_items array
-  if(!empty($settings['advanced']['target'])){
+  // Insert Target into the summary_items array.
+  if (!empty($settings['advanced']['target'])) {
     $summary_items[] = t('@label: <code>@attribute</code>', [
       '@label' => 'Target',
       '@attribute' => $settings['advanced']['target'],
@@ -92,12 +90,6 @@ function image_link_attributes_field_formatter_settings_summary_alter(&$summary,
 
 /**
  * Implements hook_field_formatter_third_party_settings_form().
- *
- * @param \Drupal\Core\Field\FormatterInterface $plugin
- * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
- * @param $view_mode
- * @param $form
- * @param \Drupal\Core\Form\FormStateInterface $form_state
  */
 function image_link_attributes_field_formatter_third_party_settings_form($plugin, $field_definition, $view_mode, $form, $form_state) {
 
@@ -107,7 +99,7 @@ function image_link_attributes_field_formatter_third_party_settings_form($plugin
     $available_attributes = \Drupal::config('image_link_attributes.config')->get('attributes') ?: [];
     $settings = $plugin->getThirdPartySettings('image_link_attributes');
 
-    if(!array_key_exists( 'extended' , $settings )) {
+    if (!array_key_exists('extended', $settings)) {
       $settings['extended'] = 0;
     }
 
@@ -129,8 +121,8 @@ function image_link_attributes_field_formatter_third_party_settings_form($plugin
       '#collapsed' => TRUE,
       '#states' => [
         'invisible' => [
-          ['select[name$="[settings][image_link]"]' => ['value' => ''],],
-          ['input[name$="[third_party_settings][image_link_attributes][extended]"]' => ['unchecked' => TRUE],],
+          ['select[name$="[settings][image_link]"]' => ['value' => '']],
+          ['input[name$="[third_party_settings][image_link_attributes][extended]"]' => ['unchecked' => TRUE]],
         ],
       ],
     ];
@@ -168,34 +160,37 @@ function image_link_attributes_field_formatter_third_party_settings_form($plugin
 }
 
 /**
- * Implements hook_preprocess_HOOK()
+ * Implements hook_preprocess_HOOK().
+ *
  * This allows us to pass attributes to the image_formatter template.
  */
 function image_link_attributes_preprocess_image_formatter(&$variables) {
 
-  // Acquire the node $entity
+  // Acquire the node $entity.
   $nid = \Drupal::routeMatch()->getRawParameter('node');
   if (empty($nid)) {
     return;
   }
-  $entity = \Drupal\node\Entity\Node::load($nid);
+  $entity = Node::load($nid);
 
-  // Assume full view_mode
+  // Assume full view_mode.
   $view_mode = "full";
 
-  // Find the $field_name in the $variables object
+  // Find the $field_name in the $variables object.
   $field_name = $variables['item']->getFieldDefinition()->getName();
 
-  /**
+  /*
    * Get 'third_party_settings' field settings
-   * and push to the template $variables['attributes']
+   * and push to the template $variables['attributes'].
    */
   $entity_display = EntityViewDisplay::collectRenderDisplay($entity, $view_mode);
   $field_display = $entity_display->getComponent($field_name);
 
-  $field_link_attributes = $field_display['third_party_settings']['image_link_attributes']['extended'];
+  if (isset($field_display['third_party_settings']['image_link_attributes'])) {
+    $field_link_attributes = $field_display['third_party_settings']['image_link_attributes']['extended'];
+  }
 
-  if($field_link_attributes){
+  if(isset($field_link_attributes)){
     $variables['attributes']['data-field-attributes'] = $field_link_attributes;
     // Loop through $available_attributes to make them available to the field template.
     $available_attributes = $field_display['third_party_settings']['image_link_attributes']['advanced'];
@@ -205,14 +200,12 @@ function image_link_attributes_preprocess_image_formatter(&$variables) {
   }
 }
 
-
 /**
- * Implements hook_theme_registry_alter
+ * Implements hook_theme_registry_alter().
  */
 function image_link_attributes_theme_registry_alter(&$theme_registry) {
   $theme_registry['image_formatter']['path'] = drupal_get_path('module', 'image_link_attributes') . '/templates/field';
 }
-
 
 /**
  * Implements hook_theme().
