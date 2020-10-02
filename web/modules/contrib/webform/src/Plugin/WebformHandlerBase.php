@@ -8,6 +8,9 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Plugin\PluginBase;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Access\AccessResult;
+use Drupal\webform\Utility\WebformDialogHelper;
 use Drupal\webform\Utility\WebformElementHelper;
 use Drupal\webform\WebformInterface;
 use Drupal\webform\WebformSubmissionConditionsValidatorInterface;
@@ -74,6 +77,13 @@ abstract class WebformHandlerBase extends PluginBase implements WebformHandlerIn
   protected $conditions = [];
 
   /**
+   * The webform handler's conditions result cache.
+   *
+   * @var array
+   */
+  protected $conditionsResultCache = [];
+
+  /**
    * The configuration factory.
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
@@ -88,7 +98,7 @@ abstract class WebformHandlerBase extends PluginBase implements WebformHandlerIn
   protected $loggerFactory;
 
   /**
-   * Webform submission storage.
+   * The webform submission storage.
    *
    * @var \Drupal\webform\WebformSubmissionStorageInterface
    */
@@ -138,7 +148,6 @@ abstract class WebformHandlerBase extends PluginBase implements WebformHandlerIn
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, LoggerChannelFactoryInterface $logger_factory, ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager, WebformSubmissionConditionsValidatorInterface $conditions_validator) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->setConfiguration($configuration);
     $this->loggerFactory = $logger_factory;
     $this->configFactory = $config_factory;
     $this->submissionStorage = $entity_type_manager->getStorage('webform_submission');
@@ -147,6 +156,8 @@ abstract class WebformHandlerBase extends PluginBase implements WebformHandlerIn
     // @todo Webform 8.x-6.x: Properly inject the token manager.
     // @todo Webform 8.x-6.x: Update handlers that injects the token manager.
     $this->tokenManager = \Drupal::service('webform.token_manager');
+
+    $this->setConfiguration($configuration);
   }
 
   /**
@@ -290,6 +301,7 @@ abstract class WebformHandlerBase extends PluginBase implements WebformHandlerIn
    */
   public function setConditions(array $conditions) {
     $this->conditions = $conditions;
+    $this->conditionsResultCache = [];
     return $this;
   }
 
@@ -354,23 +366,43 @@ abstract class WebformHandlerBase extends PluginBase implements WebformHandlerIn
   /**
    * {@inheritdoc}
    */
+  public function isApplicable(WebformInterface $webform) {
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function isSubmissionOptional() {
-    return ($this->pluginDefinition['submission'] === self::SUBMISSION_OPTIONAL);
+    return ($this->pluginDefinition['submission'] === WebformHandlerInterface::SUBMISSION_OPTIONAL);
   }
 
   /**
    * {@inheritdoc}
    */
   public function isSubmissionRequired() {
-    return ($this->pluginDefinition['submission'] === self::SUBMISSION_REQUIRED);
+    return ($this->pluginDefinition['submission'] === WebformHandlerInterface::SUBMISSION_REQUIRED);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasAnonymousSubmissionTracking() {
+    return FALSE;
   }
 
   /**
    * {@inheritdoc}
    */
   public function checkConditions(WebformSubmissionInterface $webform_submission) {
+    $hash = $webform_submission->getDataHash();
+    if (isset($this->conditionsResultCache[$hash])) {
+      return $this->conditionsResultCache[$hash];
+    }
+
     // Return TRUE if conditions are disabled for the handler.
     if (!$this->supportsConditions()) {
+      $this->conditionsResultCache[$hash] = TRUE;
       return TRUE;
     }
 
@@ -378,6 +410,7 @@ abstract class WebformHandlerBase extends PluginBase implements WebformHandlerIn
 
     // Return TRUE if no conditions are defined.
     if (empty($conditions)) {
+      $this->conditionsResultCache[$hash] = TRUE;
       return TRUE;
     }
 
@@ -392,7 +425,9 @@ abstract class WebformHandlerBase extends PluginBase implements WebformHandlerIn
     $result = $this->conditionsValidator->validateConditions($conditions, $webform_submission);
 
     // Negate result for 'disabled' state.
-    return ($state === 'disabled') ? !$result : $result;
+    $result = ($state === 'disabled') ? !$result : $result;
+    $this->conditionsResultCache[$hash] = $result;
+    return $result;
   }
 
   /**
@@ -441,8 +476,8 @@ abstract class WebformHandlerBase extends PluginBase implements WebformHandlerIn
   /**
    * {@inheritdoc}
    */
-  public function calculateDependencies() {
-    return [];
+  public function getOffCanvasWidth() {
+    return WebformDialogHelper::DIALOG_NORMAL;
   }
 
   /**
@@ -473,10 +508,14 @@ abstract class WebformHandlerBase extends PluginBase implements WebformHandlerIn
    */
   protected function applyFormStateToConfiguration(FormStateInterface $form_state) {
     $values = $form_state->getValues();
+    $default_configuration = $this->defaultConfiguration();
     foreach ($values as $key => $value) {
       if (array_key_exists($key, $this->configuration)) {
-        if (is_bool($this->configuration[$key])) {
-          $this->configuration[$key] = (int) $value;
+        if (is_bool($default_configuration[$key])) {
+          $this->configuration[$key] = (boolean) $value;
+        }
+        elseif (is_int($default_configuration[$key])) {
+          $this->configuration[$key] = (integer) $value;
         }
         else {
           $this->configuration[$key] = $value;
@@ -571,6 +610,13 @@ abstract class WebformHandlerBase extends PluginBase implements WebformHandlerIn
    */
   public function postSave(WebformSubmissionInterface $webform_submission, $update = TRUE) {}
 
+  /**
+   * {@inheritdoc}
+   */
+  public function access(WebformSubmissionInterface $webform_submission, $operation, AccountInterface $account = NULL) {
+    return AccessResult::neutral();
+  }
+
   /****************************************************************************/
   // Preprocessing methods.
   /****************************************************************************/
@@ -602,6 +648,13 @@ abstract class WebformHandlerBase extends PluginBase implements WebformHandlerIn
   /****************************************************************************/
   // Element methods.
   /****************************************************************************/
+
+  /**
+   * {@inheritdoc}
+   */
+  public function accessElement(array &$element, $operation, AccountInterface $account = NULL) {
+    return AccessResult::neutral();
+  }
 
   /**
    * {@inheritdoc}
