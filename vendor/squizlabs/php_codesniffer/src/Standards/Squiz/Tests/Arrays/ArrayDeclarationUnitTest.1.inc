@@ -394,6 +394,18 @@ HERE
       ,
        );
 
+array(
+ lorem(
+     1
+ ), 2,
+);
+
+array(
+ 1 => lorem(
+     1
+ ), 2 => 2,
+);
+
 $foo = array(
         'тип'  => 'авто',
         'цвет' => 'синий',
@@ -409,6 +421,31 @@ $foo = array(<<<JSON
 }
 JSON
        );
+
+$array = array(
+          'a'   => fn() => return 1,
+          'bb'  => fn() => return 2,
+          'ccc' => ( true ) ?
+              fn() => return 1 :
+              fn() => return 2,
+         );
+
+$array = array(
+          1 => '1',
+          2 => fn ($x) => yield 'a' => $x,
+          3 => '3',
+         );
+
+$foo = array(
+        $this->fn => 'value',
+        $foo->fn => 'value',
+       );
+
+array($a, $b,
+$c);
+
+array('a' => $a, 'b' => $b,
+'c' => $c);
 
 // Intentional syntax error.
 $a = array(
