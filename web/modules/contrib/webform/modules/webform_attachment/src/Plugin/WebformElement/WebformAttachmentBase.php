@@ -21,14 +21,14 @@ abstract class WebformAttachmentBase extends WebformElementBase implements Webfo
   /**
    * {@inheritdoc}
    */
-  public function getDefaultProperties() {
+  protected function defineDefaultProperties() {
     return [
       // Element settings.
       'title' => '',
       // Form display.
       'title_display' => '',
       // Display settings.
-      'display_on' => static::DISPLAY_ON_NONE,
+      'display_on' => WebformElementDisplayOnInterface::DISPLAY_ON_NONE,
       // Attachment values.
       'filename' => '',
       'sanitize' => FALSE,
@@ -38,18 +38,29 @@ abstract class WebformAttachmentBase extends WebformElementBase implements Webfo
       // Attributes.
       'wrapper_attributes' => [],
       'label_attributes' => [],
-    ] + $this->getDefaultBaseProperties();
+    ] + $this->defineDefaultBaseProperties();
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getDefaultBaseProperties() {
-    $properties = parent::getDefaultBaseProperties();
-    unset($properties['prepopulate']);
-    unset($properties['states_clear']);
+  protected function defineDefaultBaseProperties() {
+    $properties = parent::defineDefaultBaseProperties();
+    unset(
+      $properties['prepopulate'],
+      $properties['states_clear']
+    );
     return $properties;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function defineTranslatableProperties() {
+    return array_merge(parent::defineTranslatableProperties(), ['filename', 'link_title']);
+  }
+
+  /****************************************************************************/
 
   /**
    * {@inheritdoc}
