@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class WebformOptionsLimitController extends ControllerBase implements ContainerInjectionInterface {
 
   /**
-   * Webform request handler.
+   * The webform request handler.
    *
    * @var \Drupal\webform\WebformRequestInterface
    */
@@ -128,7 +128,10 @@ class WebformOptionsLimitController extends ControllerBase implements ContainerI
     $handlers = $webform->getHandlers();
     foreach ($handlers as $handler) {
       if ($handler instanceof WebformOptionsLimitHandlerInterface) {
-        return TRUE;
+        $configuration = $handler->getConfiguration();
+        if (empty($configuration['settings']['limit_user'])) {
+          return TRUE;
+        }
       }
     }
     return FALSE;
