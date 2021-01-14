@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\config_delete\FunctionalJavascript;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
@@ -11,12 +12,19 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  */
 class ConfigDeleteUITest extends WebDriverTestBase {
 
+  use StringTranslationTrait;
+
   /**
    * Modules to enable.
    *
    * @var array
    */
   public static $modules = ['contact', 'config', 'config_delete', 'rdf'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -40,11 +48,11 @@ class ConfigDeleteUITest extends WebDriverTestBase {
     $this->getSession()->getPage()->selectFieldOption('config_name', 'personal');
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->getSession()->getPage()->pressButton('edit-submit');
-    $this->assertSession()->pageTextContains(t('Configuration "contact.form.personal" successfully deleted.'));
+    $this->assertSession()->pageTextContains($this->t('Configuration "contact.form.personal" successfully deleted.'));
 
     $this->rebuildContainer();
     $config = $this->config('contact.form.personal');
-    $this->assertFalse($config->get('id'), $config->get('id'));
+    $this->assertNull($config->get('id'));
   }
 
   /**
@@ -57,7 +65,7 @@ class ConfigDeleteUITest extends WebDriverTestBase {
     $this->getSession()->getPage()->selectFieldOption('config_name', '- Select -');
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->getSession()->getPage()->pressButton('edit-submit');
-    $this->assertSession()->pageTextContains(t('Please select a valid configuration name.'));
+    $this->assertSession()->pageTextContains($this->t('Please select a valid configuration name.'));
   }
 
 }
